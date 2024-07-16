@@ -104,7 +104,7 @@ const BookingForm = () => {
                                 Special Offer on Park Tickets - Limited Time Only!<br />
                             </h3>
                             <div className='fs-4'>Buy 3 Get 1 Free!*</div>
-                            <small>( Valid from July 15, 2024, to August 15, 2024 )</small><br />
+                            <small>( Valid from August 01, 2024, to August 10, 2024 )</small><br />
                         </Card.Header>
                         <Card.Body>
                             <Card.Text className="text-center fw-bold">
