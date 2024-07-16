@@ -66,10 +66,8 @@ const BookingForm = () => {
             bookedDate: bookingDate.toISOString()
         };
         try {
-            console.log('bookingData', bookingData)
-            const response = await axios.get('http://localhost:8080/booking/offer', bookingData);
-            console.log('response', response)
-            setBookingDetails(data)
+            const response = await axios.post('http://localhost:8080/booking/offer', bookingData);
+            setBookingDetails(response.data)
         } catch (error) {
             console.log('error', error.message)
         }
@@ -83,8 +81,6 @@ const BookingForm = () => {
 
     const handleBooking = async () => {
         try {
-            // const response = await axios.get('http://localhost:8080/booking/offer');
-            // setBookingDetails(response.data)
             setBookingStatusMessage(`We're excited to see you! You have successfully booked ${bookingDetails.bookedTicket} ${bookingDetails.offerAvailable && '+ 1'} tickets.`);
         } catch (error) {
             setBookingStatusMessage('An error occurred while booking tickets.');
