@@ -23,6 +23,7 @@ body {
 .my-4 {
   margin: 2rem 0;
 }
+
 .card {
   border-radius: 10px;
   overflow: hidden;
@@ -54,4 +55,21 @@ button[disabled] {
 
 .react-datepicker-wrapper {
   width: 100%;
+}
+
+.ticket-button {
+  border-radius: 25px;
+  border: black;
+  background: white;
+}
+
+.button-container {
+  padding: 4%;
+  width: fit-content;
+  background: cadetblue;
+  border-radius: 25px;
+}
+
+.btn:disabled{
+  background: white;
 }

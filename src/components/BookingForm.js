@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Button, Alert, Row, Col, Container, Card, Modal } from 'react-bootstrap';
 import DatePicker from 'react-datepicker';
-import { FaUser, FaMapMarkerAlt, FaCalendarAlt, FaChild, FaUserAlt, FaTicketAlt, FaMoneyBillAlt } from 'react-icons/fa';
+import { FaUser, FaMapMarkerAlt, FaCalendarAlt, FaChild, FaUserAlt, FaTicketAlt, FaMoneyBillAlt, FaPlus, FaMinus } from 'react-icons/fa';
 import { IoTicket } from "react-icons/io5";
 import 'react-datepicker/dist/react-datepicker.css';
 import axios from 'axios';
@@ -11,6 +11,7 @@ const BookingForm = () => {
     const [tickets, setTickets] = useState({ adult: 0, child: 0, senior: 0 });
     const [showChildModal, setShowChildModal] = useState(false);
     const [message, setMessage] = useState('');
+    const [title, setTitle] = useState('');
     const [paidAmount, setPaidAmount] = useState(0);
     const [location, setLocation] = useState('');
     const [bookingDate, setBookingDate] = useState(new Date());
@@ -24,15 +25,39 @@ const BookingForm = () => {
     const allLocations = [...offerLocations, 'Chennai', 'Mumbai'];
 
     useEffect(() => {
-
         const ticketTypes = ['adult', 'child', 'senior'];
         const totalAmount = ticketTypes.reduce((total, type) => total + (tickets[type] * prices[type]), 0);
         setPaidAmount(totalAmount);
-
     }, [tickets, location]);
+
+    useEffect(() => {
+        const isBookingDateInRange = () => {
+            const startDate = new Date('2024-08-01');
+            const endDate = new Date('2024-08-10');
+            return bookingDate >= startDate && bookingDate <= endDate;
+        };
+
+        setTitle('');
+
+        if (offerLocations.includes(location) && isBookingDateInRange()) {
+            setTitle('Special Offer on Park Tickets - Limited Time Only!\nBuy 3 Get 1 Free!* \n(Valid from August 01, 2024, to August 10, 2024)');
+        } else {
+            setTitle('');
+        }
+    }, [bookingDate, location]);
 
     const handleInputChange = (type, value) => {
         setTickets({ ...tickets, [type]: parseInt(value) || 0 });
+    };
+
+    const handleDecrement = (type) => {
+        if (tickets[type] > 0) {
+            setTickets({ ...tickets, [type]: tickets[type] - 1 });
+        }
+    };
+
+    const handleIncrement = (type) => {
+        setTickets({ ...tickets, [type]: tickets[type] + 1 });
     };
 
     const handleSubmit = async (e) => {
@@ -100,11 +125,17 @@ const BookingForm = () => {
                 <Col md="8">
                     <Card className="shadow">
                         <Card.Header className="bg-primary text-white text-center">
-                            <h3 className="font-weight-bold">
-                                Special Offer on Park Tickets - Limited Time Only!<br />
-                            </h3>
-                            <div className='fs-4'>Buy 3 Get 1 Free!*</div>
-                            <small>( Valid from August 01, 2024, to August 10, 2024 )</small><br />
+                            {title ? (
+                                title.split('\n').map((line, index) => (
+                                    <div key={index}>
+                                        {index === 0 && <h3 className="font-weight-bold">{line}</h3>}
+                                        {index === 1 && <div className='fs-4'>{line}</div>}
+                                        {index === 2 && <small>{line}</small>}
+                                    </div>
+                                ))
+                            ) : (
+                                <h3>Welcome to Park Ticket Booking</h3>
+                            )}
                         </Card.Header>
                         <Card.Body>
                             <Card.Text className="text-center fw-bold">
@@ -157,37 +188,58 @@ const BookingForm = () => {
                                         <Col md="4">
                                             <Form.Group controlId="formAdultTickets">
                                                 <Form.Label className="font-weight-bold">Adult Tickets (₹800 each)</Form.Label>
-                                                <Form.Control
-                                                    type="number"
-                                                    min="0"
-                                                    value={tickets.adult}
-                                                    onChange={(e) => handleInputChange('adult', e.target.value)}
-                                                />
+                                                <div className="d-flex align-items-center button-container">
+                                                    <Button variant="outline-secondary ticket-button" onClick={() => handleDecrement('adult')} disabled={tickets.adult === 0}><FaMinus style={{ height: '25px' }} /></Button>
+                                                    <Form.Control
+                                                        type="number"
+                                                        min="0"
+                                                        value={tickets.adult}
+                                                        onChange={(e) => handleInputChange('adult', e.target.value)}
+                                                        className="text-center mx-2"
+                                                        style={{ width: '60px', margin: 0, background: 'transparent', border: 'none' }}
+                                                        readOnly
+                                                    />
+                                                    <Button variant="outline-secondary ticket-button" onClick={() => handleIncrement('adult')}><FaPlus style={{ height: '25px' }} /></Button>
+                                                </div>
                                             </Form.Group>
                                         </Col>
                                         <Col md="4">
                                             <Form.Group controlId="formChildTickets">
                                                 <Form.Label className="font-weight-bold">Child Tickets (₹600 each)</Form.Label>
-                                                <Form.Control
-                                                    type="number"
-                                                    min="0"
-                                                    value={tickets.child}
-                                                    onChange={(e) => {
-                                                        handleInputChange('child', e.target.value);
-                                                        if (parseInt(e.target.value) > 0) setShowChildModal(true);
-                                                    }}
-                                                />
+                                                <div className="d-flex align-items-center button-container">
+                                                    <Button variant="outline-secondary ticket-button" onClick={() => handleDecrement('child')} disabled={tickets.child === 0}><FaMinus style={{ height: '25px' }} /></Button>
+                                                    <Form.Control
+                                                        type="number"
+                                                        min="0"
+                                                        value={tickets.child}
+                                                        onChange={(e) => {
+                                                            handleInputChange('child', e.target.value);
+                                                            if (parseInt(e.target.value) > 0) setShowChildModal(true);
+                                                        }}
+                                                        className="text-center mx-2"
+                                                        style={{ width: '60px', margin: 0, background: 'transparent', border: 'none' }}
+                                                        readOnly
+                                                    />
+                                                    <Button variant="outline-secondary ticket-button" onClick={() => handleIncrement('child')}><FaPlus style={{ height: '25px' }} /></Button>
+                                                </div>
                                             </Form.Group>
                                         </Col>
                                         <Col md="4">
                                             <Form.Group controlId="formSeniorTickets">
                                                 <Form.Label className="font-weight-bold">Senior Citizen Tickets (₹700 each)</Form.Label>
-                                                <Form.Control
-                                                    type="number"
-                                                    min="0"
-                                                    value={tickets.senior}
-                                                    onChange={(e) => handleInputChange('senior', e.target.value)}
-                                                />
+                                                <div className="d-flex align-items-center button-container">
+                                                    <Button variant="outline-secondary ticket-button" onClick={() => handleDecrement('senior')} disabled={tickets.senior === 0}><FaMinus style={{ height: '25px' }} /></Button>
+                                                    <Form.Control
+                                                        type="number"
+                                                        min="0"
+                                                        value={tickets.senior}
+                                                        onChange={(e) => handleInputChange('senior', e.target.value)}
+                                                        className="text-center mx-2"
+                                                        style={{ width: '60px', margin: 0, background: 'transparent', border: 'none' }}
+                                                        readOnly
+                                                    />
+                                                    <Button variant="outline-secondary ticket-button" onClick={() => handleIncrement('senior')}><FaPlus style={{ height: '25px' }} /></Button>
+                                                </div>
                                             </Form.Group>
                                         </Col>
                                     </Row>
