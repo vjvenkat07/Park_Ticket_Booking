@@ -100,7 +100,11 @@ const BookingForm = () => {
                 <Col md="8">
                     <Card className="shadow">
                         <Card.Header className="bg-primary text-white text-center">
-                            <h3 className="font-weight-bold">Special Offer on Park Tickets - Limited Time Only!</h3>
+                            <h3 className="font-weight-bold">
+                                Special Offer on Park Tickets - Limited Time Only!<br />
+                            </h3>
+                            <div className='fs-4'>Buy 3 Get 1 Free!*</div>
+                            <small>( Valid from July 15, 2024, to August 15, 2024 )</small><br />
                         </Card.Header>
                         <Card.Body>
                             <Card.Text className="text-center fw-bold">
