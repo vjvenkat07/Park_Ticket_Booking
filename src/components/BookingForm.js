@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Form, Button, Alert, Row, Col, Container, Card, Modal } from 'react-bootstrap';
 import DatePicker from 'react-datepicker';
 import { FaUser, FaMapMarkerAlt, FaCalendarAlt, FaChild, FaUserAlt, FaTicketAlt, FaMoneyBillAlt } from 'react-icons/fa';
+import { IoTicket } from "react-icons/io5";
 import 'react-datepicker/dist/react-datepicker.css';
 import axios from 'axios';
 
@@ -68,7 +69,7 @@ const BookingForm = () => {
             console.log('bookingData', bookingData)
             const response = await axios.get('http://localhost:8080/booking/offer', bookingData);
             console.log('response', response)
-            setBookingDetails(response.data)
+            setBookingDetails(data)
         } catch (error) {
             console.log('error', error.message)
         }
@@ -84,7 +85,7 @@ const BookingForm = () => {
         try {
             // const response = await axios.get('http://localhost:8080/booking/offer');
             // setBookingDetails(response.data)
-            setBookingStatusMessage('Booking successful!');
+            setBookingStatusMessage(`We're excited to see you! You have successfully booked ${bookingDetails.bookedTicket} ${bookingDetails.offerAvailable && '+ 1'} tickets.`);
         } catch (error) {
             setBookingStatusMessage('An error occurred while booking tickets.');
         }
@@ -238,7 +239,7 @@ const BookingForm = () => {
                                                     <strong>Booking Date</strong>
                                                 </Col>
                                                 <Col xs="8">
-                                                    {bookingDetails.bookingDate.toDateString()}
+                                                    {new Date(bookingDetails.bookedDate).toDateString()}
                                                 </Col>
                                             </Row>
                                             <Row className="mb-3 align-items-center">
@@ -249,7 +250,7 @@ const BookingForm = () => {
                                                     <strong>Adult Tickets</strong>
                                                 </Col>
                                                 <Col xs="8">
-                                                    {bookingDetails.adult}
+                                                    {bookingDetails.adultTicket}
                                                 </Col>
                                             </Row>
                                             <Row className="mb-3 align-items-center">
@@ -260,7 +261,7 @@ const BookingForm = () => {
                                                     <strong>Child Tickets</strong>
                                                 </Col>
                                                 <Col xs="8">
-                                                    {bookingDetails.child}
+                                                    {bookingDetails.childTicket}
                                                 </Col>
                                             </Row>
                                             <Row className="mb-3 align-items-center">
@@ -271,9 +272,23 @@ const BookingForm = () => {
                                                     <strong>Senior Citizen Tickets</strong>
                                                 </Col>
                                                 <Col xs="8">
-                                                    {bookingDetails.senior}
+                                                    {bookingDetails.seniorCitizenTicket}
                                                 </Col>
                                             </Row>
+                                            {
+                                                bookingDetails.offerAvailable &&
+                                                <Row className="mb-3 align-items-center">
+                                                    <Col xs="1" className="text-center">
+                                                        <IoTicket className="text-primary" />
+                                                    </Col>
+                                                    <Col xs="3" className="text-right">
+                                                        <strong>Free Ticket</strong>
+                                                    </Col>
+                                                    <Col xs="8">
+                                                        {`${bookingDetails.freeTicketCount} (For ${bookingDetails.freeTicketFor})`}
+                                                    </Col>
+                                                </Row>
+                                            }
                                             <Row className="mb-3 align-items-center">
                                                 <Col xs="1" className="text-center">
                                                     <FaTicketAlt className="text-primary" />
@@ -283,7 +298,7 @@ const BookingForm = () => {
                                                 </Col>
                                                 <Col xs="8">
                                                     {
-                                                        bookingDetails.childTicket + bookingDetails.seniorCitizenTicket + bookingDetails.adultTicket
+                                                        bookingDetails.bookedTicket + bookingDetails.freeTicketCount
                                                     }
                                                 </Col>
                                             </Row>
@@ -331,7 +346,7 @@ const BookingForm = () => {
             {/* Booking Status Modal */}
             <Modal show={showBookingModal} onHide={() => setShowBookingModal(false)}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Booking Status</Modal.Title>
+                    <Modal.Title>Booking Success!</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <p>{bookingStatusMessage}</p>
