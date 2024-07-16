@@ -82,7 +82,7 @@ const BookingForm = () => {
 
     const handleBooking = async () => {
         try {
-            setBookingStatusMessage(`We're excited to see you! You have successfully booked ${bookingDetails.bookedTicket} ${bookingDetails.offerAvailable && '+ 1'} tickets.`);
+            setBookingStatusMessage(`We're excited to see you! You have successfully booked ${bookingDetails.bookedTicket} ${bookingDetails.offerAvailable ? '+ 1' : ""} tickets.`);
         } catch (error) {
             setBookingStatusMessage('An error occurred while booking tickets.');
         }
