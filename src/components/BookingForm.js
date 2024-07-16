@@ -68,10 +68,11 @@ const BookingForm = () => {
         try {
             const response = await axios.post('http://localhost:8080/booking/offer', bookingData);
             setBookingDetails(response.data)
+            setCurrentStep(2);
         } catch (error) {
+            setMessage(error.message);
             console.log('error', error.message)
         }
-        setCurrentStep(2);
     };
 
     const handleBack = () => {
