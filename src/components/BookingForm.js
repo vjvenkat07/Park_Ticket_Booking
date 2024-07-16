@@ -65,7 +65,9 @@ const BookingForm = () => {
             bookedDate: bookingDate.toISOString()
         };
         try {
+            console.log('bookingData', bookingData)
             const response = await axios.get('http://localhost:8080/booking/offer', bookingData);
+            console.log('response', response)
             setBookingDetails(response.data)
         } catch (error) {
             console.log('error', error.message)

@@ -1,6 +1,5 @@
 import React from 'react';
 import BookingForm from './components/BookingForm';
-import parkImage from './assets/background_park.avif'
 
 const App = () => {
   return (
