@@ -57,6 +57,9 @@ const BookingForm = () => {
     };
 
     const handleIncrement = (type) => {
+        if (type === 'child' && tickets[type] === 0 && !showChildModal) {
+            setShowChildModal(true);
+        }
         setTickets({ ...tickets, [type]: tickets[type] + 1 });
     };
 
